@@ -1,0 +1,73 @@
+<h2>Admin — Dynamic Form</h2>
+
+<div class="bar">
+<input
+  class="filter"
+  placeholder="Filter grid…"
+  [value]="filterText()"
+  (input)="filterText.set($any($event.target).value)"
+/>
+</div>
+
+<form [formGroup]="form" (ngSubmit)="submit()" class="form">
+  <div class="row">
+    <label for="fullName">Full Name</label>
+    <input id="fullName" formControlName="fullName" />
+    <small class="err" *ngIf="form.get('fullName')?.invalid && (form.get('fullName')?.dirty || form.get('fullName')?.touched)">
+      Required
+    </small>
+  </div>
+
+  <div class="row">
+    <label for="email">Email (@admin.company.com)</label>
+    <input id="email" type="email" formControlName="email" />
+    <small class="err" *ngIf="form.get('email')?.errors && (form.get('email')?.dirty || form.get('email')?.touched)">
+      Invalid admin email
+    </small>
+  </div>
+
+  <div class="row">
+    <label for="adminCode">Admin Code (ADM-1234)</label>
+    <input id="adminCode" formControlName="adminCode" />
+    <small class="err" *ngIf="form.get('adminCode')?.errors && (form.get('adminCode')?.dirty || form.get('adminCode')?.touched)">
+      Must match ADM-0000 format
+    </small>
+  </div>
+
+  <div class="row">
+    <label for="password">Password (strong)</label>
+    <input id="password" type="password" formControlName="password" />
+    <small class="err" *ngIf="form.get('password')?.errors && (form.get('password')?.dirty || form.get('password')?.touched)">
+      Min 12 chars, upper/lower/digit/special
+    </small>
+  </div>
+
+  <div class="row">
+    <label for="confirmPassword">Confirm Password</label>
+    <input id="confirmPassword" type="password" formControlName="confirmPassword" />
+    <small class="err" *ngIf="form.get('confirmPassword')?.errors && (form.get('confirmPassword')?.dirty || form.get('confirmPassword')?.touched)">
+      Must match password
+    </small>
+  </div>
+
+  <button type="submit">Submit</button>
+</form>
+
+<h3>Submitted Records</h3>
+<table class="grid" *ngIf="view().length">
+  <thead>
+    <tr>
+      <th (click)="setSort('fullName')">Full Name</th>
+      <th (click)="setSort('email')">Email</th>
+      <th (click)="setSort('adminCode')">Admin Code</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let r of view()">
+      <td>{{ r.fullName }}</td>
+      <td>{{ r.email }}</td>
+      <td>{{ r.adminCode }}</td>
+    </tr>
+  </tbody>
+</table>
+<p *ngIf="!view().length">No records yet.</p>
