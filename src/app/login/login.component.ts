@@ -16,11 +16,12 @@ export class LoginComponent {
   password = '';
   error = '';
 
-  login() {
-    this.error = '';
-    this.auth.login(this.email, this.password).subscribe({
-      next: () => this.router.navigateByUrl('/dashboard'),
-      error: () => this.error = 'Invalid email or password'
-    });
-  }
+  onSubmit(e: Event) {
+  e.preventDefault(); // <-- prevents native POST /login
+  this.error = '';
+  this.auth.login(this.email, this.password).subscribe({
+    next: () => this.router.navigateByUrl('/dashboard'),
+    error: () => this.error = 'Invalid email or password'
+  });
+}
 }

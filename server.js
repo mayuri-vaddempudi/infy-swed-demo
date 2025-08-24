@@ -34,14 +34,13 @@ app.get('/api/verify', auth, (req, res) => {
   res.json({ email: req.user.email, role: req.user.role });
 });
 
-// --- serve Angular build in prod ---
 const DIST = path.join(__dirname, 'dist', 'infy-swed-demo', 'browser');
 app.use(express.static(DIST));
 
-// SPA fallback for non-API routes (Express 5-friendly)
-app.get(/^\/(?!api).*/, (req, res) => {
-  res.sendFile(path.join(DIST, 'index.html'));
-});
+const sendIndex = (req, res) => res.sendFile(path.join(DIST, 'index.html'));
+
+// serve index.html for any NON-API path and for ANY method (GET/POST/etc)
+app.all(/^\/(?!api).*/, sendIndex);
 
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => console.log(`Server on http://localhost:${PORT}`));
