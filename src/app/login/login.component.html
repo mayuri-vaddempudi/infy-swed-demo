@@ -1,0 +1,16 @@
+<div class="box">
+  <h2>AuthCraft</h2>
+  <p class="sub">Demo: me@admin.com / 123456 (also @manager.com / @agent.com / @customer.com)</p>
+
+  <form (ngSubmit)="login()">
+    <label>Email</label>
+    <input type="email" [(ngModel)]="email" name="email" required placeholder="me@admin.com" />
+
+    <label>Password</label>
+    <input type="password" [(ngModel)]="password" name="password" required placeholder="123456" />
+
+    <button type="submit">Login</button>
+
+    <p *ngIf="error" class="err">{{ error }}</p>
+  </form>
+</div>
