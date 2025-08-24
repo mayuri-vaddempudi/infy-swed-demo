@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AnalyticsWidget } from './widgets/analytics.widget';
-import { SystemLogsWidget } from './widgets/system-logs.widget';
-import { UserManagementWidget } from './widgets/user-management.widget';
+import { AnalyticsWidget } from '../widgets/admin/analytics.widget';
+import { SystemLogsWidget } from '../widgets/admin/system-logs.widget';
+import { UserManagementWidget } from '../widgets/admin/user-management.widget';
 
 @Component({
   selector: 'app-admin-dashboard',

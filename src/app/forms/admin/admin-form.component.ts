@@ -4,6 +4,7 @@ import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { emailEndsWith, strongPassword, confirmMatches } from './admin-validators';
 
 @Component({
+  selector: 'app-admin-form',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './admin-form.component.html',

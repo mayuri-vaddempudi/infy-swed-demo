@@ -1,0 +1,21 @@
+<!-- src/app/forms/manager-form.component.html -->
+<h2>Manager — Dynamic Form</h2>
+<div class="bar">
+  <input class="filter" placeholder="Filter grid…" [value]="filterText()" (input)="onFilterInput($any($event.target).value)"/>
+</div>
+
+<form [formGroup]="form" (ngSubmit)="submit()" class="form">
+  <div class="row"><label>Full Name</label><input formControlName="fullName"/></div>
+  <div class="row"><label>Email</label><input type="email" formControlName="email"/></div>
+  <div class="row"><label>Department</label><input formControlName="department"/></div>
+  <div class="row"><label>Team Size</label><input type="number" formControlName="teamSize"/></div>
+  <div class="row"><label>Joining Date</label><input type="date" formControlName="joiningDate"/></div>
+  <button type="submit">Submit</button>
+</form>
+
+<h3>Submitted Records</h3>
+<table class="grid" *ngIf="view().length">
+  <thead><tr><th (click)="setSort('fullName')">Full Name</th><th (click)="setSort('email')">Email</th><th (click)="setSort('department')">Department</th><th (click)="setSort('teamSize')">Team Size</th><th (click)="setSort('joiningDate')">Joining Date</th></tr></thead>
+  <tbody><tr *ngFor="let r of view()"><td>{{r.fullName}}</td><td>{{r.email}}</td><td>{{r.department}}</td><td>{{r.teamSize}}</td><td>{{r.joiningDate}}</td></tr></tbody>
+</table>
+<p *ngIf="!view().length">No records yet.</p>

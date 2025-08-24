@@ -1,0 +1,21 @@
+<!-- src/app/forms/customer-form.component.html -->
+<h2>Customer — Dynamic Form</h2>
+<div class="bar">
+  <input class="filter" placeholder="Filter grid…" [value]="filterText()" (input)="onFilterInput($any($event.target).value)"/>
+</div>
+
+<form [formGroup]="form" (ngSubmit)="submit()" class="form">
+  <div class="row"><label>Full Name</label><input formControlName="fullName"/></div>
+  <div class="row"><label>Email</label><input type="email" formControlName="email"/></div>
+  <div class="row"><label>Phone</label><input placeholder="10 digits" formControlName="phone"/></div>
+  <div class="row"><label>Preferred Contact</label><input placeholder="Email/Phone" formControlName="preferredContact"/></div>
+  <div class="row"><label>Address</label><input formControlName="address"/></div>
+  <button type="submit">Submit</button>
+</form>
+
+<h3>Submitted Records</h3>
+<table class="grid" *ngIf="view().length">
+  <thead><tr><th (click)="setSort('fullName')">Full Name</th><th (click)="setSort('email')">Email</th><th (click)="setSort('phone')">Phone</th><th (click)="setSort('preferredContact')">Preferred</th><th (click)="setSort('address')">Address</th></tr></thead>
+  <tbody><tr *ngFor="let r of view()"><td>{{r.fullName}}</td><td>{{r.email}}</td><td>{{r.phone}}</td><td>{{r.preferredContact}}</td><td>{{r.address}}</td></tr></tbody>
+</table>
+<p *ngIf="!view().length">No records yet.</p>
