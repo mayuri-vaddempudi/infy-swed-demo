@@ -1,56 +1,41 @@
 <h2>Admin — Dynamic Form</h2>
 
 <div class="bar">
-<input
-  class="filter"
-  placeholder="Filter grid…"
-  [value]="filterText()"
-  (input)="filterText.set($any($event.target).value)"
-/>
+  <input class="filter" placeholder="Filter grid…" [value]="filterText()" (input)="onFilterInput($any($event.target).value)" aria-label="Filter submitted records"/>
 </div>
 
-<form [formGroup]="form" (ngSubmit)="submit()" class="form">
+<form [formGroup]="form" (ngSubmit)="submit()" class="form" novalidate>
   <div class="row">
     <label for="fullName">Full Name</label>
-    <input id="fullName" formControlName="fullName" />
-    <small class="err" *ngIf="form.get('fullName')?.invalid && (form.get('fullName')?.dirty || form.get('fullName')?.touched)">
-      Required
-    </small>
+    <input id="fullName" formControlName="fullName" autocomplete="name"/>
+    <small class="err" *ngIf="form.get('fullName')?.invalid && (form.get('fullName')?.dirty || form.get('fullName')?.touched)">Required</small>
   </div>
 
   <div class="row">
-    <label for="email">Email (@admin.company.com)</label>
-    <input id="email" type="email" formControlName="email" />
-    <small class="err" *ngIf="form.get('email')?.errors && (form.get('email')?.dirty || form.get('email')?.touched)">
-      Invalid admin email
-    </small>
+    <label for="email">Admin Email (@admin.company.com)</label>
+    <input id="email" type="email" formControlName="email" autocomplete="email"/>
+    <small class="err" *ngIf="form.get('email')?.errors && (form.get('email')?.dirty || form.get('email')?.touched)">Invalid admin email</small>
   </div>
 
   <div class="row">
     <label for="adminCode">Admin Code (ADM-1234)</label>
-    <input id="adminCode" formControlName="adminCode" />
-    <small class="err" *ngIf="form.get('adminCode')?.errors && (form.get('adminCode')?.dirty || form.get('adminCode')?.touched)">
-      Must match ADM-0000 format
-    </small>
+    <input id="adminCode" formControlName="adminCode"/>
+    <small class="err" *ngIf="form.get('adminCode')?.errors && (form.get('adminCode')?.dirty || form.get('adminCode')?.touched)">Must match ADM-0000 format</small>
   </div>
 
   <div class="row">
     <label for="password">Password (strong)</label>
-    <input id="password" type="password" formControlName="password" />
-    <small class="err" *ngIf="form.get('password')?.errors && (form.get('password')?.dirty || form.get('password')?.touched)">
-      Min 12 chars, upper/lower/digit/special
-    </small>
+    <input id="password" type="password" formControlName="password" autocomplete="new-password"/>
+    <small class="err" *ngIf="form.get('password')?.errors && (form.get('password')?.dirty || form.get('password')?.touched)">Min 12 chars, upper/lower/digit/special</small>
   </div>
 
   <div class="row">
     <label for="confirmPassword">Confirm Password</label>
-    <input id="confirmPassword" type="password" formControlName="confirmPassword" />
-    <small class="err" *ngIf="form.get('confirmPassword')?.errors && (form.get('confirmPassword')?.dirty || form.get('confirmPassword')?.touched)">
-      Must match password
-    </small>
+    <input id="confirmPassword" type="password" formControlName="confirmPassword" autocomplete="new-password"/>
+    <small class="err" *ngIf="form.get('confirmPassword')?.errors && (form.get('confirmPassword')?.dirty || form.get('confirmPassword')?.touched)">Must match password</small>
   </div>
 
-  <button type="submit">Submit</button>
+  <button type="submit" [disabled]="form.invalid">Submit</button>
 </form>
 
 <h3>Submitted Records</h3>

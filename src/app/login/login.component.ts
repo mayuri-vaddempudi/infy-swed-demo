@@ -5,23 +5,35 @@ import { Router } from '@angular/router';
 import { AuthService } from '../auth/auth.service';
 
 @Component({
-  standalone: true, imports: [CommonModule, FormsModule],
+  selector: 'app-login',
+  standalone: true,
+  imports: [CommonModule, FormsModule],
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+  styleUrls: ['./login.component.css'] // uses your nice card CSS
 })
 export class LoginComponent {
   private auth = inject(AuthService);
   private router = inject(Router);
+
   email = '';
   password = '';
+  loading = false;
   error = '';
 
-  onSubmit(e: Event) {
-  e.preventDefault(); // <-- prevents native POST /login
-  this.error = '';
-  this.auth.login(this.email, this.password).subscribe({
-    next: () => this.router.navigateByUrl('/dashboard'),
-    error: () => this.error = 'Invalid email or password'
-  });
-}
+  async onSubmit(evt: Event) {
+    evt.preventDefault();            // prevent full-page submit
+    this.error = '';
+    if (!this.email || !this.password) return;
+
+    this.loading = true;
+    try {
+      // AuthService should POST /api/login and store the session {token,email,role}
+      await this.auth.login(this.email, this.password).toPromise();
+      await this.router.navigate(['/dashboard']);
+    } catch (e: any) {
+      this.error = e?.error?.message || 'Login failed. Check your credentials.';
+    } finally {
+      this.loading = false;
+    }
+  }
 }
