@@ -1,24 +1,39 @@
 <h2>Customer — Dynamic Form</h2>
 
-<div class="bar">
-  <input class="filter" placeholder="Filter grid…" [value]="filterText()" (input)="onFilterInput($any($event.target).value)" aria-label="Filter submitted records"/>
-</div>
-
 <form [formGroup]="form" (ngSubmit)="submit()" class="form" novalidate>
-  <div class="row"><label for="fullName">Full Name</label><input id="fullName" formControlName="fullName" autocomplete="name"/></div>
+  <!-- Full Name -->
+  <div class="row">
+    <label for="fullName">Full Name</label>
+    <input id="fullName" formControlName="fullName" />
+  </div>
 
+  <!-- Email -->
   <div class="row">
     <label for="email">Email</label>
-    <input id="email" type="email" formControlName="email" autocomplete="email"/>
-    <small class="err" *ngIf="form.get('email')?.errors && (form.get('email')?.dirty || form.get('email')?.touched)">Invalid email</small>
+    <input id="email" type="email" formControlName="email" />
+    <small
+      class="err"
+      *ngIf="form.get('email')?.hasError('email') && (form.get('email')?.touched || submitted)"
+    >
+      Invalid email
+    </small>
   </div>
 
+  <!-- Phone -->
   <div class="row">
     <label for="phone">Phone (10 digits)</label>
-    <input id="phone" type="tel" inputmode="numeric" maxlength="10" formControlName="phone"/>
-    <small class="err" *ngIf="form.get('phone')?.hasError('phoneFormat')">Phone must be exactly 10 digits</small>
+    <input id="phone" type="tel" inputmode="numeric" maxlength="10" formControlName="phone" />
+    <small
+      class="err"
+      *ngIf="
+        form.get('phone')?.hasError('phoneFormat') && (form.get('phone')?.touched || submitted)
+      "
+    >
+      Phone must be exactly 10 digits
+    </small>
   </div>
 
+  <!-- Preferred Contact -->
   <div class="row">
     <label for="preferredContact">Preferred Contact</label>
     <select id="preferredContact" formControlName="preferredContact">
@@ -28,30 +43,45 @@
     </select>
   </div>
 
+  <!-- Address (required if contact = Phone) -->
   <div class="row">
     <label for="address">Address</label>
-    <input id="address" formControlName="address" autocomplete="street-address"/>
-    <small class="err"
-      *ngIf="(form.hasError('addressRequiredIfPhone') || form.get('address')?.hasError('required')) 
-             && (form.get('address')?.dirty || form.get('address')?.touched)">
+    <input id="address" formControlName="address" />
+    <small
+      class="err"
+      *ngIf="
+        form.get('address')?.hasError('required') && (form.get('address')?.touched || submitted)
+      "
+    >
       Address is required when Preferred Contact is Phone
     </small>
   </div>
 
-  <button type="submit" [disabled]="form.invalid">Submit</button>
+  <button type="submit">Submit</button>
 </form>
 
 <h3>Submitted Records</h3>
-<table class="grid" *ngIf="view().length">
-  <thead><tr>
-    <th (click)="setSort('fullName')">Full Name</th>
-    <th (click)="setSort('email')">Email</th>
-    <th (click)="setSort('phone')">Phone</th>
-    <th (click)="setSort('preferredContact')">Preferred</th>
-    <th (click)="setSort('address')">Address</th>
-  </tr></thead>
-  <tbody><tr *ngFor="let r of view()">
-    <td>{{r.fullName}}</td><td>{{r.email}}</td><td>{{r.phone}}</td><td>{{r.preferredContact}}</td><td>{{r.address}}</td>
-  </tr></tbody>
+<table class="grid" *ngIf="rows().length; else emptyState">
+  <thead>
+    <tr>
+      <th>Full Name</th>
+      <th>Email</th>
+      <th>Phone</th>
+      <th>Preferred</th>
+      <th>Address</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let r of rows()">
+      <td>{{ r.fullName || '—' }}</td>
+      <td>{{ r.email || '—' }}</td>
+      <td>{{ r.phone || '—' }}</td>
+      <td>{{ r.preferredContact || '—' }}</td>
+      <td>{{ r.address || '—' }}</td>
+    </tr>
+  </tbody>
 </table>
-<p *ngIf="!view().length">No records yet.</p>
+
+<ng-template #emptyState>
+  <p class="muted">No records yet.</p>
+</ng-template>

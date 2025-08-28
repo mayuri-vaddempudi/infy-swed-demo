@@ -1,0 +1,27 @@
+<h2>Manager Dashboard</h2>
+
+<p class="muted" *ngIf="session as s">
+  Signed in as <b>{{ s.email }}</b>
+</p>
+
+<div class="cards">
+  <section class="card half">
+    <h4>Team Performance</h4>
+    <p class="muted">KPIs for teams (demo):</p>
+    <ul>
+      <li>Avg. CSAT: 4.6 / 5</li>
+      <li>Tickets Resolved Today: 128</li>
+      <li>Backlog: 67</li>
+    </ul>
+  </section>
+
+  <section class="card half">
+    <h4>Reports</h4>
+    <p class="muted">Generate &amp; view reports (demo):</p>
+    <ul>
+      <li>Daily Summary — ready</li>
+      <li>Weekly Trends — in progress</li>
+      <li>Agent Leaderboard — ready</li>
+    </ul>
+  </section>
+</div>

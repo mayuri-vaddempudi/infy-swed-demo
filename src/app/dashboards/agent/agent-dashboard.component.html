@@ -1,0 +1,27 @@
+<h2>Agent Dashboard</h2>
+
+<p class="muted" *ngIf="session as s">
+  Signed in as <b>{{ s.email }}</b>
+</p>
+
+<div class="cards">
+  <section class="card half">
+    <h4>Call History</h4>
+    <p class="muted">Recent calls (demo):</p>
+    <ul>
+      <li>10:42 • Inbound • 4m 03s</li>
+      <li>10:15 • Outbound • 2m 18s</li>
+      <li>09:58 • Inbound • 6m 47s</li>
+    </ul>
+  </section>
+
+  <section class="card half">
+    <h4>IVR Flows</h4>
+    <p class="muted">Available flows (demo):</p>
+    <ul>
+      <li>Support → Billing → Agent</li>
+      <li>Support → Technical → Agent</li>
+      <li>Sales → Pre-sales → Agent</li>
+    </ul>
+  </section>
+</div>

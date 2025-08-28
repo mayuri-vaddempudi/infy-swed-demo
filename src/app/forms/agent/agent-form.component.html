@@ -1,44 +1,85 @@
 <h2>Agent — Dynamic Form</h2>
 
-<div class="bar">
-  <input class="filter" placeholder="Filter grid…" [value]="filterText()" (input)="onFilterInput($any($event.target).value)" aria-label="Filter submitted records"/>
-</div>
-
 <form [formGroup]="form" (ngSubmit)="submit()" class="form" novalidate>
-  <div class="row"><label for="fullName">Full Name</label><input id="fullName" formControlName="fullName" autocomplete="name"/></div>
-  <div class="row"><label for="email">Email</label><input id="email" type="email" formControlName="email" autocomplete="email"/></div>
+  <!-- Full Name (optional) -->
+  <div class="row">
+    <label for="fullName">Full Name</label>
+    <input id="fullName" formControlName="fullName" />
+  </div>
 
+  <!-- Email (optional) -->
+  <div class="row">
+    <label for="email">Email</label>
+    <input id="email" type="email" formControlName="email" />
+  </div>
+
+  <!-- Region -->
   <div class="row">
     <label for="region">Region</label>
     <select id="region" formControlName="region">
+      <option value="" disabled>Select region</option>
       <option *ngFor="let r of regions" [value]="r">{{ r }}</option>
     </select>
-    <small class="err" *ngIf="form.get('region')?.hasError('notInRegion')">Must be one of {{ regions.join(', ') }}</small>
+    <small
+      class="err"
+      *ngIf="
+        form.get('region')?.hasError('notInRegion') && (form.get('region')?.touched || submitted)
+      "
+    >
+      Region must be one of: {{ regions.join(', ') }}
+    </small>
   </div>
 
-  <div class="row"><label for="shiftTiming">Shift Timing</label><input id="shiftTiming" formControlName="shiftTiming" placeholder="e.g., 09:00-17:00"/></div>
+  <!-- Shift Timing (optional) -->
+  <div class="row">
+    <label for="shiftTiming">Shift Timing</label>
+    <input id="shiftTiming" formControlName="shiftTiming" placeholder="e.g., 09:00–17:00" />
+  </div>
 
+  <!-- Supervisor ID (pattern only) -->
   <div class="row">
     <label for="supervisorId">Supervisor ID</label>
-    <input id="supervisorId" placeholder="SUP-1234" formControlName="supervisorId"/>
-    <small class="err" *ngIf="form.get('supervisorId')?.pending">Checking supervisor…</small>
-    <small class="err" *ngIf="form.get('supervisorId')?.hasError('noSuchSupervisor')">Invalid Supervisor ID</small>
+    <input id="supervisorId" formControlName="supervisorId" placeholder="SUP-1234" />
+    <small
+      class="err"
+      *ngIf="
+        form.get('supervisorId')?.hasError('badSupervisorId') &&
+        (form.get('supervisorId')?.touched || submitted)
+      "
+    >
+      Supervisor ID must match SUP-1234 format (In real app this would be validated via API)
+    </small>
   </div>
 
-  <button type="submit" [disabled]="form.invalid">Submit</button>
+  <button type="submit">Submit</button>
 </form>
 
-<h3>Submitted Records</h3>
-<table class="grid" *ngIf="view().length">
-  <thead><tr>
-    <th (click)="setSort('fullName')">Full Name</th>
-    <th (click)="setSort('email')">Email</th>
-    <th (click)="setSort('region')">Region</th>
-    <th (click)="setSort('shiftTiming')">Shift</th>
-    <th (click)="setSort('supervisorId')">Supervisor</th>
-  </tr></thead>
-  <tbody><tr *ngFor="let r of view()">
-    <td>{{r.fullName}}</td><td>{{r.email}}</td><td>{{r.region}}</td><td>{{r.shiftTiming}}</td><td>{{r.supervisorId}}</td>
-  </tr></tbody>
+<h3>
+  Submitted Records
+  <span class="muted" *ngIf="rows().length">({{ rows().length }})</span>
+</h3>
+
+<table class="grid" *ngIf="rows().length; else emptyState">
+  <thead>
+    <tr>
+      <th>Full Name</th>
+      <th>Email</th>
+      <th>Region</th>
+      <th>Shift</th>
+      <th>Supervisor</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let r of rows()">
+      <td>{{ r.fullName || '—' }}</td>
+      <td>{{ r.email || '—' }}</td>
+      <td>{{ r.region || '—' }}</td>
+      <td>{{ r.shiftTiming || '—' }}</td>
+      <td>{{ r.supervisorId || '—' }}</td>
+    </tr>
+  </tbody>
 </table>
-<p *ngIf="!view().length">No records yet.</p>
+
+<ng-template #emptyState>
+  <p class="muted">No records yet.</p>
+</ng-template>

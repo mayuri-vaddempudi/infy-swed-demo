@@ -1,0 +1,27 @@
+<h2>Customer Dashboard</h2>
+
+<p class="muted" *ngIf="session as s">
+  Signed in as <b>{{ s.email }}</b>
+</p>
+
+<div class="cards">
+  <section class="card half">
+    <h4>Account Info</h4>
+    <p class="muted">Profile &amp; plan details (demo).</p>
+    <ul>
+      <li>Plan: Premium</li>
+      <li>Renewal: 15 Oct 2025</li>
+      <li>Contact Preference: Email</li>
+    </ul>
+  </section>
+
+  <section class="card half">
+    <h4>Tickets Raised</h4>
+    <p class="muted">Recent tickets (demo).</p>
+    <ul>
+      <li>#12457 — Billing query — Resolved</li>
+      <li>#12412 — Login issue — Open</li>
+      <li>#12398 — Feature request — In review</li>
+    </ul>
+  </section>
+</div>

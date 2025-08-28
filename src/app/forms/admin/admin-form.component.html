@@ -1,58 +1,89 @@
 <h2>Admin — Dynamic Form</h2>
 
-<div class="bar">
-  <input class="filter" placeholder="Filter grid…" [value]="filterText()" (input)="onFilterInput($any($event.target).value)" aria-label="Filter submitted records"/>
-</div>
+<form [formGroup]="form" (ngSubmit)="submit()" class="form">
+  <label>Full Name</label>
+  <input formControlName="fullName" type="text" placeholder="Enter full name" />
 
-<form [formGroup]="form" (ngSubmit)="submit()" class="form" novalidate>
-  <div class="row">
-    <label for="fullName">Full Name</label>
-    <input id="fullName" formControlName="fullName" autocomplete="name"/>
-    <small class="err" *ngIf="form.get('fullName')?.invalid && (form.get('fullName')?.dirty || form.get('fullName')?.touched)">Required</small>
+  <label>Admin Email (@admin.company.com)</label>
+  <input formControlName="email" type="email" placeholder="me@admin.company.com" />
+  <div *ngIf="form.get('email')?.touched && form.get('email')?.invalid" class="err">
+    Must be a valid email ending with @admin.company.com
   </div>
 
-  <div class="row">
-    <label for="email">Admin Email (@admin.company.com)</label>
-    <input id="email" type="email" formControlName="email" autocomplete="email"/>
-    <small class="err" *ngIf="form.get('email')?.errors && (form.get('email')?.dirty || form.get('email')?.touched)">Invalid admin email</small>
+  <label>Admin Code (ADM-1234)</label>
+  <input formControlName="adminCode" type="text" placeholder="ADM-1234" />
+  <div *ngIf="form.get('adminCode')?.touched && form.get('adminCode')?.invalid" class="err">
+    Admin Code must match pattern ADM-1234
   </div>
 
-  <div class="row">
-    <label for="adminCode">Admin Code (ADM-1234)</label>
-    <input id="adminCode" formControlName="adminCode"/>
-    <small class="err" *ngIf="form.get('adminCode')?.errors && (form.get('adminCode')?.dirty || form.get('adminCode')?.touched)">Must match ADM-0000 format</small>
+  <label>Password (strong)</label>
+  <input formControlName="password" type="password" />
+  <div *ngIf="form.get('password')?.touched && form.get('password')?.invalid" class="err">
+    Password must be at least 12 chars, with upper/lower/digit/special
   </div>
 
-  <div class="row">
-    <label for="password">Password (strong)</label>
-    <input id="password" type="password" formControlName="password" autocomplete="new-password"/>
-    <small class="err" *ngIf="form.get('password')?.errors && (form.get('password')?.dirty || form.get('password')?.touched)">Min 12 chars, upper/lower/digit/special</small>
+  <label>Confirm Password</label>
+  <input formControlName="confirmPassword" type="password" />
+  <div *ngIf="form.get('confirmPassword')?.touched && form.get('confirmPassword')?.invalid" class="err">
+    Must match the password
   </div>
 
-  <div class="row">
-    <label for="confirmPassword">Confirm Password</label>
-    <input id="confirmPassword" type="password" formControlName="confirmPassword" autocomplete="new-password"/>
-    <small class="err" *ngIf="form.get('confirmPassword')?.errors && (form.get('confirmPassword')?.dirty || form.get('confirmPassword')?.touched)">Must match password</small>
-  </div>
-
-  <button type="submit" [disabled]="form.invalid">Submit</button>
+  <button type="submit" class="btn-primary">Submit</button>
 </form>
 
-<h3>Submitted Records</h3>
-<table class="grid" *ngIf="view().length">
-  <thead>
-    <tr>
-      <th (click)="setSort('fullName')">Full Name</th>
-      <th (click)="setSort('email')">Email</th>
-      <th (click)="setSort('adminCode')">Admin Code</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let r of view()">
-      <td>{{ r.fullName }}</td>
-      <td>{{ r.email }}</td>
-      <td>{{ r.adminCode }}</td>
-    </tr>
-  </tbody>
-</table>
-<p *ngIf="!view().length">No records yet.</p>
+<hr />
+
+<h3>
+  Submitted Records
+  <span class="muted" *ngIf="view().length">({{ view().length }})</span>
+</h3>
+
+<div class="bar" style="margin-top: 6px">
+  <div class="left">
+    <input
+      class="filter input-sm"
+      #flt
+      placeholder="Filter…"
+      (input)="onFilterInput(flt.value)"
+      [value]="filterText()"
+      aria-label="Filter rows"
+    />
+
+    <button class="btn-ghost" type="button" (click)="clearFilter()">Clear</button>
+  </div>
+
+  <div class="right muted">
+    <span *ngIf="sortKey()"
+      >Sorted by <b>{{ sortKey() }}</b> ({{ sortDir() === 1 ? 'asc' : 'desc' }})</span
+    >
+  </div>
+</div>
+
+<div class="table-wrap">
+  <table class="grid" *ngIf="view().length; else emptyAdminState">
+    <thead>
+      <tr>
+        <th scope="col" (click)="setSort('fullName')" style="cursor: pointer">
+          Full Name <span class="sort" *ngIf="isSortedBy('fullName')">{{ dirArrow() }}</span>
+        </th>
+        <th scope="col" (click)="setSort('email')" style="cursor: pointer">
+          Email <span class="sort" *ngIf="isSortedBy('email')">{{ dirArrow() }}</span>
+        </th>
+        <th scope="col" (click)="setSort('adminCode')" style="cursor: pointer">
+          Admin Code <span class="sort" *ngIf="isSortedBy('adminCode')">{{ dirArrow() }}</span>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let r of view()">
+        <td>{{ r.fullName || '—' }}</td>
+        <td>{{ r.email }}</td>
+        <td>{{ r.adminCode }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<ng-template #emptyAdminState>
+  <p class="muted">No records yet.</p>
+</ng-template>

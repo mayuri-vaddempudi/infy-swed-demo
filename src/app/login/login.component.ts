@@ -6,10 +6,8 @@ import { AuthService } from '../auth/auth.service';
 
 @Component({
   selector: 'app-login',
-  standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css'] // uses your nice card CSS
 })
 export class LoginComponent {
   private auth = inject(AuthService);
@@ -21,7 +19,7 @@ export class LoginComponent {
   error = '';
 
   async onSubmit(evt: Event) {
-    evt.preventDefault();            // prevent full-page submit
+    evt.preventDefault();
     this.error = '';
     if (!this.email || !this.password) return;
 

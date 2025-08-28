@@ -1,59 +1,125 @@
-# InfySwedDemo
+# Infy-Swed Demo — Angular Role-Based Authentication
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.2.0.
+**Live demo:** https://infy-swed-demo.onrender.com  
+**GitHub Repo:** https://github.com/mayuri-vaddempudi/infy-swed-demo  
 
-## Development server
+---
 
-To start a local development server, run:
+## 🌟 What this app is
 
-```bash
-ng serve
-```
+This is a simple **Angular + Node/Express** demo built for self tasks.  
+It shows how a user can log in with email & password, get a **JWT token**, and then see different **dashboards and forms** depending on their role:
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+- **Admin**
+- **Manager**
+- **Agent**
+- **Customer**
 
-## Code scaffolding
+Each role has its **own dashboard widgets + its own form validations**.  
+Forms submit into a small grid where you can **filter and sort**.  
+The app works on **desktop and mobile** (responsive).
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+---
 
-```bash
-ng generate component component-name
-```
+## 🧪 Try Me Accounts
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+👉 Use password: **123456** for all accounts.
 
-```bash
-ng generate --help
-```
+| Role     | Email              | What you’ll see                                |
+|----------|--------------------|-----------------------------------------------|
+| Admin    | alice@admin.com    | Admin dashboard + Admin form                  |
+| Manager  | bob@manager.com    | Manager dashboard + Manager form              |
+| Agent    | amy@agent.com      | Agent dashboard + Agent form                  |
+| Customer | carl@demo.com      | Customer dashboard + Customer form            |
 
-## Building
+> The role is decided from the **email domain**.  
+> `@admin.com` → Admin, `@manager.com` → Manager, `@agent.com` → Agent, everything else = Customer.
 
-To build the project run:
+---
 
-```bash
-ng build
-```
+## 🧱 Requirements
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+- Node.js **18 or later**
+- npm (comes with Node)
 
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
+Install dependencies:
 
 ```bash
-ng e2e
+npm install
+
+
+---
+
+## ▶️ Running in Development
+
+There are two options:
+
+### Option A — Angular + API together (recommended)
+
+```bash
+npm run dev
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+This runs both:
 
-## Additional Resources
+- Backend API → http://localhost:4000  
+- Angular app → http://localhost:4200 (opens automatically)  
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+Angular proxies `/api/*` to the backend using **proxy.conf.json**.
+
+---
+
+### Option B — Angular only
+
+```bash
+npm start   # same as: ng serve
+```
+
+⚠️ Without the backend (`server.js`) running, **login and verify will fail**.  
+This option is only good if you’re working on **UI screens only**.
+
+---
+
+## 🏭 Running in Production (Locally)
+
+1. Build the Angular app:
+
+```bash
+npm run build
+```
+
+2. Run the Express server in production mode:
+
+```bash
+npm run serve:prod
+```
+
+3. Open http://localhost:4000
+
+In this mode:
+
+- Express serves the **Angular dist** folder (for SPA routes like `/dashboard`)  
+- Express also exposes the **API endpoints** under `/api`
+
+---
+
+## ☁️ Deployment on Render
+
+The app is deployed here: https://infy-swed-demo.onrender.com
+
+Render settings:
+
+- **Build Command:** `npm ci && npm run build`  
+- **Start Command:** `node server.js`  
+- **Port:** Render provides `PORT` automatically, and `server.js` uses it.
+
+---
+
+## 🔐 How Login/Auth Works
+
+1. User logs in with email + password.  
+2. Backend checks credentials, decides role from email, returns a **JWT**.  
+3. Angular stores `{ token, email, role }`.  
+4. For every `/api/*` call, Angular’s interceptor adds `Authorization: Bearer <token>`.  
+5. **Auth Guard** protects routes; if no valid token → redirect to `/login`.  
+6. Dashboards and forms change depending on the role.

@@ -1,12 +1,20 @@
 import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 
-/** Exactly 10 digits */
-export const phone10: ValidatorFn = (c: AbstractControl): ValidationErrors | null =>
-  /^\d{10}$/.test(String(c.value ?? '')) ? null : { phoneFormat: true };
+/** Phone must be exactly 10 digits */
+export const phoneTenDigits: ValidatorFn = (c: AbstractControl): ValidationErrors | null => {
+  const v = (c.value ?? '').toString().trim();
+  return /^\d{10}$/.test(v) ? null : { phoneFormat: true };
+};
 
-/** Group level: Address required when preferredContact === 'Phone' */
-export const addressRequiredIfPhone: ValidatorFn = (group: AbstractControl): ValidationErrors | null => {
-  const pref = group.get('preferredContact')?.value;
-  const addr = group.get('address')?.value;
-  return pref === 'Phone' && !addr ? { addressRequiredIfPhone: true } : null;
+/** Address required if preferredContact = "Phone" */
+export const addressRequiredIfPhone: ValidatorFn = (
+  c: AbstractControl,
+): ValidationErrors | null => {
+  if (!c.parent) return null;
+  const contact = c.parent.get('preferredContact')?.value;
+  const addr = c.value?.toString().trim();
+  if (contact === 'Phone' && !addr) {
+    return { required: true };
+  }
+  return null;
 };

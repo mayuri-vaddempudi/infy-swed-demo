@@ -1,0 +1,36 @@
+<h2>Admin Dashboard</h2>
+
+<p class="muted" *ngIf="session as s">
+  Signed in as <b>{{ s.email }}</b>
+</p>
+
+<div class="cards">
+  <section class="card third">
+    <h4>User Management</h4>
+    <ul>
+      <li>Create / deactivate users (demo)</li>
+      <li>Assign roles</li>
+      <li>Reset passwords</li>
+    </ul>
+  </section>
+
+  <section class="card third">
+    <h4>System Logs</h4>
+    <p class="muted">Recent activity (demo data):</p>
+    <ul>
+      <li>10:31 User A updated settings</li>
+      <li>10:25 Manager B created report</li>
+      <li>10:10 Agent C closed ticket</li>
+    </ul>
+  </section>
+
+  <section class="card third">
+    <h4>Analytics</h4>
+    <p class="muted">KPIs (demo):</p>
+    <ul>
+      <li>Active Users: 1,245</li>
+      <li>Tickets Today: 182</li>
+      <li>Avg. Handle Time: 4m 12s</li>
+    </ul>
+  </section>
+</div>

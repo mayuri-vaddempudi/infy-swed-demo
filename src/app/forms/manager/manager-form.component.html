@@ -1,29 +1,92 @@
 <h2>Manager — Dynamic Form</h2>
 
-<div class="bar">
-  <input class="filter" placeholder="Filter grid…" [value]="filterText()" (input)="onFilterInput($any($event.target).value)" aria-label="Filter submitted records"/>
-</div>
-
 <form [formGroup]="form" (ngSubmit)="submit()" class="form" novalidate>
-  <div class="row"><label for="fullName">Full Name</label><input id="fullName" formControlName="fullName" autocomplete="name"/></div>
-  <div class="row"><label for="email">Email</label><input id="email" type="email" formControlName="email" autocomplete="email"/></div>
-  <div class="row"><label for="department">Department</label><input id="department" formControlName="department" autocomplete="organization-title"/></div>
-  <div class="row"><label for="teamSize">Team Size</label><input id="teamSize" type="number" min="1" step="1" inputmode="numeric" formControlName="teamSize"/></div>
-  <div class="row"><label for="joiningDate">Joining Date</label><input id="joiningDate" type="date" [max]="todayISO" formControlName="joiningDate"/></div>
-  <button type="submit" [disabled]="form.invalid">Submit</button>
+  <!-- Full Name (optional) -->
+  <div class="row">
+    <label for="fullName">Full Name</label>
+    <input id="fullName" formControlName="fullName" autocomplete="name" />
+  </div>
+
+  <!-- Email (optional) -->
+  <div class="row">
+    <label for="email">Email</label>
+    <input id="email" type="email" formControlName="email" autocomplete="email" />
+  </div>
+
+  <!-- Department (optional) -->
+  <div class="row">
+    <label for="department">Department</label>
+    <input id="department" formControlName="department" autocomplete="organization-title" />
+  </div>
+
+  <!-- Team Size (must be > 0) -->
+  <div class="row">
+    <label for="teamSize">Team Size</label>
+    <input
+      id="teamSize"
+      type="number"
+      min="1"
+      step="1"
+      inputmode="numeric"
+      formControlName="teamSize"
+    />
+    <small
+      class="err"
+      aria-live="polite"
+      *ngIf="
+        form.get('teamSize')?.hasError('notPositive') &&
+        (form.get('teamSize')?.touched || submitted)
+      "
+    >
+      Team size must be greater than 0
+    </small>
+  </div>
+
+  <!-- Joining Date (must be in the past) -->
+  <div class="row">
+    <label for="joiningDate">Joining Date</label>
+    <input id="joiningDate" type="date" [max]="todayISO" formControlName="joiningDate" />
+    <small
+      class="err"
+      aria-live="polite"
+      *ngIf="
+        form.get('joiningDate')?.hasError('futureDate') &&
+        (form.get('joiningDate')?.touched || submitted)
+      "
+    >
+      Joining date must be in the past
+    </small>
+  </div>
+
+  <button type="submit">Submit</button>
 </form>
 
-<h3>Submitted Records</h3>
-<table class="grid" *ngIf="view().length">
-  <thead><tr>
-    <th (click)="setSort('fullName')">Full Name</th>
-    <th (click)="setSort('email')">Email</th>
-    <th (click)="setSort('department')">Department</th>
-    <th (click)="setSort('teamSize')">Team Size</th>
-    <th (click)="setSort('joiningDate')">Joining Date</th>
-  </tr></thead>
-  <tbody><tr *ngFor="let r of view()">
-    <td>{{r.fullName}}</td><td>{{r.email}}</td><td>{{r.department}}</td><td>{{r.teamSize}}</td><td>{{r.joiningDate}}</td>
-  </tr></tbody>
+<h3>
+  Submitted Records
+  <span class="muted" *ngIf="rows().length">({{ rows().length }})</span>
+</h3>
+
+<table class="grid" *ngIf="rows().length; else emptyState">
+  <thead>
+    <tr>
+      <th scope="col">Full Name</th>
+      <th scope="col">Email</th>
+      <th scope="col">Department</th>
+      <th scope="col">Team Size</th>
+      <th scope="col">Joining Date</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let r of rows()">
+      <td>{{ r.fullName || '—' }}</td>
+      <td>{{ r.email || '—' }}</td>
+      <td>{{ r.department || '—' }}</td>
+      <td>{{ r.teamSize }}</td>
+      <td>{{ r.joiningDate }}</td>
+    </tr>
+  </tbody>
 </table>
-<p *ngIf="!view().length">No records yet.</p>
+
+<ng-template #emptyState>
+  <p class="muted">No records yet.</p>
+</ng-template>

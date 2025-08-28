@@ -1,18 +1,13 @@
-// src/app/dashboards/customer-dashboard.component.ts
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AccountInfoWidget } from '../widgets/customer/account-info.widget';
-import { TicketsWidget } from '../widgets/customer/tickets.widget';
+import { AuthService } from '../../auth/auth.service';
 
 @Component({
-  selector:'app-customer-dashboard',
-  standalone:true,
-  imports:[CommonModule, AccountInfoWidget, TicketsWidget],
-  template:`<h2>Customer Dashboard</h2>
-  <section class="grid">
-    <app-account-info></app-account-info>
-    <app-tickets></app-tickets>
-  </section>`,
-  styles:[`.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}`]
+  selector: 'app-customer-dashboard',
+  imports: [CommonModule],
+  templateUrl: './customer-dashboard.component.html',
 })
-export class CustomerDashboardComponent {}
+export class CustomerDashboardComponent {
+  private auth = inject(AuthService);
+  session = this.auth.session;
+}

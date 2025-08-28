@@ -2,16 +2,27 @@
   <h2>Welcome back</h2>
   <p class="sub">Sign in to continue</p>
 
-  <!-- Your original form structure preserved (now wrapped in the card) -->
-  <form (ngSubmit)="onSubmit($event)">
+  <form class="form" (ngSubmit)="onSubmit($event)" novalidate>
     <label for="email">Email</label>
     <input id="email" type="email" [(ngModel)]="email" name="email" required autocomplete="email" autofocus />
 
     <label for="password">Password</label>
     <input id="password" type="password" [(ngModel)]="password" name="password" required autocomplete="current-password" />
 
-    <button type="submit" [disabled]="loading">{{ loading ? 'Signing in…' : 'Login' }}</button>
+    <button type="submit" class="btn btn-primary btn-block" [disabled]="loading">
+      {{ loading ? 'Signing in…' : 'Login' }}
+    </button>
 
     <p *ngIf="error" class="err">{{ error }}</p>
+
+    <div class="hints" style="margin-top:12px">
+      <h4>Try Me Accounts</h4>
+      <ul>
+        <li><b>Admin:</b> me@admin.com / 123456</li>
+        <li><b>Manager:</b> me@manager.com / 123456</li>
+        <li><b>Agent:</b> me@agent.com / 123456</li>
+        <li><b>Customer:</b> me@demo.com / 123456</li>
+      </ul>
+    </div>
   </form>
 </div>

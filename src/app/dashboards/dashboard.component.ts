@@ -1,4 +1,3 @@
-// src/app/dashboards/dashboard-shell.component.ts
 import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AuthService, Role } from '../auth/auth.service';
@@ -8,18 +7,23 @@ import { CustomerDashboardComponent } from './customer/customer-dashboard.compon
 import { ManagerDashboardComponent } from './manager/manager-dashboard.component';
 
 @Component({
-  standalone: true,
-  imports: [CommonModule, AdminDashboardComponent, ManagerDashboardComponent, AgentDashboardComponent, CustomerDashboardComponent],
+  imports: [
+    CommonModule,
+    AdminDashboardComponent,
+    ManagerDashboardComponent,
+    AgentDashboardComponent,
+    CustomerDashboardComponent,
+  ],
   template: `
     <ng-container [ngSwitch]="role()">
-      <app-admin-dashboard    *ngSwitchCase="'Admin'"></app-admin-dashboard>
-      <app-manager-dashboard  *ngSwitchCase="'Manager'"></app-manager-dashboard>
-      <app-agent-dashboard    *ngSwitchCase="'Agent'"></app-agent-dashboard>
+      <app-admin-dashboard *ngSwitchCase="'Admin'"></app-admin-dashboard>
+      <app-manager-dashboard *ngSwitchCase="'Manager'"></app-manager-dashboard>
+      <app-agent-dashboard *ngSwitchCase="'Agent'"></app-agent-dashboard>
       <app-customer-dashboard *ngSwitchDefault></app-customer-dashboard>
     </ng-container>
-  `
+  `,
 })
-export class DashboardShellComponent {
+export class DashboardComponent {
   private auth = inject(AuthService);
   role = signal<Role>(this.auth.session?.role || 'Customer');
 }

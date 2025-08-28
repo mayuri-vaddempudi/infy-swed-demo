@@ -1,0 +1,19 @@
+<!-- Top bar is hidden on /login -->
+<header class="topbar" *ngIf="!isLoginPage()">
+  <div class="brand" routerLink="/dashboard">AuthCraft</div>
+
+  <nav class="nav">
+    <a class="btn-link" routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
+    <a class="btn-link" routerLink="/form" routerLinkActive="active">Dynamic Form</a>
+  </nav>
+
+  <div class="spacer"></div>
+
+  <div class="userbar" *ngIf="auth.session as s">
+    <button class="btn-ghost" (click)="logout()">Logout</button>
+  </div>
+</header>
+
+<main class="container">
+  <router-outlet></router-outlet>
+</main>
